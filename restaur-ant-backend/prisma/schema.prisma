@@ -12,6 +12,45 @@ enum Role {
   USER
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum RestaurantStatus {
+  ACTIVE
+  INACTIVE
+}
+
 model User {
-  id String @id @default(uuid())
+  id       String @id @default(uuid())
+  name     String @unique
+  email    String @unique
+  password String
+
+  status UserStatus @default(ACTIVE)
+  role   Role       @default(USER)
+
+  Reviews Review[]
+}
+
+model Restaurant {
+  id     String           @id @default(uuid())
+  name   String
+  status RestaurantStatus @default(ACTIVE)
+
+  Reviews Review[]
+}
+
+model Review {
+  id          String   @id @default(uuid())
+  rating      Int
+  comment     String
+  dateOfVisit DateTime
+
+
+  restaurantId String
+  userId       String
+  restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
 }
