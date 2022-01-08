@@ -7,6 +7,14 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/generated/dto"
+  outputToNestJsResourceStructure = "true"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "true"
+}
+
 enum Role {
   ADMIN
   USER
@@ -23,28 +31,38 @@ enum RestaurantStatus {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String @unique
-  email    String @unique
+  // @DtoReadOnly
+  id       String     @id @default(uuid())
+  // @DtoUpdateOptional
+  name     String     @unique
+  // @DtoUpdateOptional
+  email    String     @unique
+  // @DtoUpdateOptional
   password String
-
-  status UserStatus @default(ACTIVE)
-  role   Role       @default(USER)
+  // @DtoUpdateOptional
+  status   UserStatus @default(ACTIVE)
+  // @DtoUpdateOptional
+  role     Role       @default(USER)
 
   Reviews Review[]
 }
 
 model Restaurant {
+  // @DtoReadOnly
   id     String           @id @default(uuid())
+  // @DtoUpdateOptional
   name   String
+  // @DtoUpdateOptional
   status RestaurantStatus @default(ACTIVE)
 
   Reviews Review[]
 }
 
 model Review {
+  // @DtoReadOnly
   id          String   @id @default(uuid())
   rating      Int
+  // @DtoUpdateOptional
   comment     String
   dateOfVisit DateTime
 
