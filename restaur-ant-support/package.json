@@ -1,0 +1,12 @@
+{
+  "name": "restaur-ant-local-support",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compose": "docker-compose -f docker-compose.yml up -d --build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
