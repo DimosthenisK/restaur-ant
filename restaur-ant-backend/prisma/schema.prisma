@@ -34,7 +34,7 @@ model User {
   // @DtoReadOnly
   id       String     @id @default(uuid())
   // @DtoUpdateOptional
-  name     String     @unique
+  name     String
   // @DtoUpdateOptional
   email    String     @unique
   // @DtoUpdateOptional
