@@ -9,7 +9,7 @@ export class BearerAuthGuard extends AuthGuard('bearer') {
   }
 
   /**
-   * If an @Anonymous decoratoer is set,
+   * If an @Anonymous decorator is set,
    * then ignore the default canActivate
    * @param context
    */
