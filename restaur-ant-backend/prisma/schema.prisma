@@ -49,11 +49,17 @@ model User {
 
 model Restaurant {
   // @DtoReadOnly
-  id     String           @id @default(uuid())
+  id          String           @id @default(uuid())
   // @DtoUpdateOptional
-  name   String
+  name        String
   // @DtoUpdateOptional
-  status RestaurantStatus @default(ACTIVE)
+  address     String
+  // @DtoUpdateOptional
+  phone       String
+  // @DtoUpdateOptional
+  description String
+  // @DtoUpdateOptional
+  status      RestaurantStatus @default(ACTIVE)
 
   Reviews Review[]
 }
