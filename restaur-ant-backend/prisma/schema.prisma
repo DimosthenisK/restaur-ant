@@ -38,13 +38,13 @@ enum ReviewStatus {
 
 model User {
   // @DtoReadOnly
-  id        String     @id @default(uuid())
+  id        String     @id @default(uuid()) @db.Char(36)
   // @DtoUpdateOptional
-  name      String
+  name      String     @db.VarChar(255)
   // @DtoUpdateOptional
-  email     String     @unique
+  email     String     @unique @db.VarChar(255)
   // @DtoUpdateOptional
-  password  String
+  password  String     @db.VarChar(255)
   // @DtoUpdateOptional
   status    UserStatus @default(ACTIVE)
   // @DtoUpdateOptional
@@ -57,15 +57,15 @@ model User {
 
 model Restaurant {
   // @DtoReadOnly
-  id          String           @id @default(uuid())
+  id          String           @id @default(uuid()) @db.Char(36)
   // @DtoUpdateOptional
-  name        String
+  name        String           @db.VarChar(255)
   // @DtoUpdateOptional
-  address     String
+  address     String           @db.VarChar(255)
   // @DtoUpdateOptional
-  phone       String
+  phone       String           @db.VarChar(255)
   // @DtoUpdateOptional
-  description String
+  description String           @db.Text
   // @DtoUpdateOptional
   status      RestaurantStatus @default(ACTIVE)
   // @DtoReadOnly
@@ -76,11 +76,11 @@ model Restaurant {
 
 model Review {
   // @DtoReadOnly
-  id          String       @id @default(uuid())
+  id          String       @id @default(uuid()) @db.Char(36)
   rating      Int
   // @DtoUpdateOptional
-  comment     String
-  dateOfVisit DateTime
+  comment     String       @db.Text
+  dateOfVisit DateTime     @db.Date
   // @DtoUpdateOptional
   status      ReviewStatus @default(PUBLISHED)
   // @DtoReadOnly
