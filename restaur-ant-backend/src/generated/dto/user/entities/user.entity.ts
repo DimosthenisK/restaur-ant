@@ -10,5 +10,6 @@ email: string ;
 password: string ;
 status: UserStatus ;
 role: Role ;
+createdAt: Date ;
 Reviews?: Review[] ;
 }

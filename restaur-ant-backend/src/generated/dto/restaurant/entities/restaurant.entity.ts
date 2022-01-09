@@ -10,5 +10,6 @@ address: string ;
 phone: string ;
 description: string ;
 status: RestaurantStatus ;
+createdAt: Date ;
 Reviews?: Review[] ;
 }

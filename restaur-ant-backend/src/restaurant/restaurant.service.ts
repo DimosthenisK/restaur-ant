@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Restaurant } from '@prisma/client';
+import { Restaurant, RestaurantStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -7,11 +7,17 @@ export class RestaurantService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findAll(skip: number, take: number): Promise<Restaurant[]> {
-    return this.prismaService.restaurant.findMany({ skip, take });
+    return this.prismaService.restaurant.findMany({
+      skip,
+      take,
+      where: { status: RestaurantStatus.ACTIVE },
+    });
   }
 
   async findOne(id: string): Promise<Restaurant> {
-    return this.prismaService.restaurant.findUnique({ where: { id } });
+    return this.prismaService.restaurant.findFirst({
+      where: { id, status: RestaurantStatus.ACTIVE },
+    });
   }
 
   async create(restaurantDto: Partial<Restaurant>) {
@@ -22,6 +28,7 @@ export class RestaurantService {
       phone: restaurantDto.phone,
       description: restaurantDto.description,
       status: undefined,
+      createdAt: undefined,
     };
 
     try {
@@ -30,6 +37,7 @@ export class RestaurantService {
       });
       return createdRestaurant;
     } catch (err) {
+      //TODO HANDLE
       throw err;
     }
   }
@@ -55,6 +63,26 @@ export class RestaurantService {
         });
         return updatedRestaurant;
       } catch (err) {
+        //TODO HANDLE
+        throw err;
+      }
+    } else throw new Error(`RESTAURANT_NOT_FOUND`);
+  }
+
+  async delete(id: string) {
+    const restaurant = await this.prismaService.restaurant.findUnique({
+      where: { id },
+    });
+
+    if (restaurant) {
+      try {
+        const updatedRestaurant = await this.prismaService.restaurant.update({
+          data: { status: RestaurantStatus.INACTIVE },
+          where: { id },
+        });
+        return updatedRestaurant;
+      } catch (err) {
+        //TODO HANDLE
         throw err;
       }
     } else throw new Error(`RESTAURANT_NOT_FOUND`);

@@ -12,6 +12,7 @@ import { RolesGuard } from '../user/authentication/guards/roles.guard';
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -76,6 +77,26 @@ export class RestaurantController {
       return {
         success: true,
         message: 'Restaurant updated successfully',
+        data: updatedRestaurant.id,
+      };
+    } catch (err) {
+      //TODO Handle
+      console.log(err);
+      return { success: false, message: err.message };
+    }
+  }
+
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  @Delete('/:id')
+  @ApiParam({ name: 'id', type: 'string' })
+  async delete(@Param('id') id: string) {
+    try {
+      const updatedRestaurant = await this.restaurantService.delete(id);
+
+      return {
+        success: true,
+        message: 'Restaurant deleted successfully',
         data: updatedRestaurant.id,
       };
     } catch (err) {

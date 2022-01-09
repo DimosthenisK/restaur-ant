@@ -11,6 +11,7 @@ import { CreateUserDto, UpdateUserDto } from '../generated/dto/user/dto';
 import {
   Body,
   Controller,
+  Delete,
   Param,
   Patch,
   Post,
@@ -78,6 +79,26 @@ export class UserController {
       return {
         success: true,
         message: 'User updated successfully',
+        data: updatedUser.id,
+      };
+    } catch (err) {
+      //TODO Handle
+      console.log(err);
+      return { success: false, message: err.message };
+    }
+  }
+
+  @ApiBearerAuth('bearer')
+  @UseGuards(BearerAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @Delete('/:id')
+  async delete(@Param('id') id: string) {
+    try {
+      const updatedUser = await this.userService.delete(id);
+
+      return {
+        success: true,
+        message: 'User deleted successfully',
         data: updatedUser.id,
       };
     } catch (err) {

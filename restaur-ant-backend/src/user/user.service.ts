@@ -18,6 +18,7 @@ export class UserService {
       password: await this.encryptionService.hash(dtoUser.password),
       status: undefined,
       role: undefined,
+      createdAt: undefined,
     };
     try {
       const createdUser = await this.prismaService.user.create({ data: user });
@@ -63,6 +64,25 @@ export class UserService {
         throw err;
       }
     } else throw new Error('USER_NOT_FOUND');
+  }
+
+  async delete(id: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+
+    if (user) {
+      try {
+        const updatedUser = await this.prismaService.user.update({
+          data: { status: UserStatus.INACTIVE },
+          where: { id },
+        });
+        return updatedUser;
+      } catch (err) {
+        //TODO HANDLE
+        throw err;
+      }
+    } else throw new Error(`USER_NOT_FOUND`);
   }
 
   async findOneByID(id: string, evenIfDeleted = false): Promise<User> {
