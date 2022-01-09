@@ -30,19 +30,27 @@ enum RestaurantStatus {
   INACTIVE
 }
 
+enum ReviewStatus {
+  UNPUBLISHED
+  DELETED
+  PUBLISHED
+}
+
 model User {
   // @DtoReadOnly
-  id       String     @id @default(uuid())
+  id        String     @id @default(uuid())
   // @DtoUpdateOptional
-  name     String
+  name      String
   // @DtoUpdateOptional
-  email    String     @unique
+  email     String     @unique
   // @DtoUpdateOptional
-  password String
+  password  String
   // @DtoUpdateOptional
-  status   UserStatus @default(ACTIVE)
+  status    UserStatus @default(ACTIVE)
   // @DtoUpdateOptional
-  role     Role       @default(USER)
+  role      Role       @default(USER)
+  // @DtoReadOnly
+  createdAt DateTime   @default(now())
 
   Reviews Review[]
 }
@@ -60,19 +68,23 @@ model Restaurant {
   description String
   // @DtoUpdateOptional
   status      RestaurantStatus @default(ACTIVE)
+  // @DtoReadOnly
+  createdAt   DateTime         @default(now())
 
   Reviews Review[]
 }
 
 model Review {
   // @DtoReadOnly
-  id          String   @id @default(uuid())
+  id          String       @id @default(uuid())
   rating      Int
   // @DtoUpdateOptional
   comment     String
   dateOfVisit DateTime
   // @DtoUpdateOptional
   status      ReviewStatus @default(PUBLISHED)
+  // @DtoReadOnly
+  createdAt   DateTime     @default(now())
 
 
   restaurantId String
