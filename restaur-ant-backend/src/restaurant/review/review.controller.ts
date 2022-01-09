@@ -1,11 +1,7 @@
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiParam,
-  ApiTags
-  } from '@nestjs/swagger';
-import { Review, User } from '@prisma/client';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 import { Request as ExpressRequest } from 'express';
+import { CreateReviewDto, UpdateReviewDto } from './dtos/overrides';
 import { ReviewService } from './review.service';
 import { Roles } from '../../user/authentication/decorators/roles.decorator';
 import { BearerAuthGuard } from '../../user/authentication/guards/bearer.guard';
@@ -21,10 +17,6 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import {
-  CreateReviewDto,
-  UpdateReviewDto,
-} from '../..//generated/dto/review/dto';
 @ApiTags('Review')
 @ApiBearerAuth('bearer')
 @UseGuards(BearerAuthGuard)
@@ -42,7 +34,7 @@ export class ReviewController {
   @ApiBody({ type: () => CreateReviewDto })
   @ApiParam({ name: 'restaurantId', type: 'string' })
   async create(
-    @Body() dto: Partial<Review>,
+    @Body() dto: CreateReviewDto,
     @Param('restaurantId') restaurantId: string,
     @Request() request: ExpressRequest & { user: User },
   ) {
@@ -72,7 +64,7 @@ export class ReviewController {
   @Patch('/:id')
   @ApiParam({ name: 'id', type: 'string' })
   @ApiBody({ type: () => UpdateReviewDto })
-  async update(@Body() dto: Partial<Review>, @Param('id') id: string) {
+  async update(@Body() dto: UpdateReviewDto, @Param('id') id: string) {
     try {
       const updatedReview = await this.reviewService.update(id, dto);
 

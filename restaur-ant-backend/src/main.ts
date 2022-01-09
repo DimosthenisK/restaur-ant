@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -9,6 +10,7 @@ async function bootstrap() {
   const prismaService: PrismaService = app.get(PrismaService);
   prismaService.enableShutdownHooks(app);
 
+  //Swagger
   const config = new DocumentBuilder()
     .setTitle('RestaurAnt API')
     .setDescription('RestaurAnt API')
@@ -21,6 +23,17 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      exceptionFactory: (errors) => ({
+        success: false,
+        message: errors[0].toString(),
+      }),
+    }),
+  );
 
   await app.listen(3000);
 }

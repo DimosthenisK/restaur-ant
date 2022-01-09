@@ -1,10 +1,6 @@
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiParam,
-  ApiTags
-  } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Restaurant } from '@prisma/client';
+import { CreateRestaurantDto, UpdateRestaurantDto } from './dtos/overrides';
 import { RestaurantService } from './restaurant.service';
 import { Roles } from '../user/authentication/decorators/roles.decorator';
 import { BearerAuthGuard } from '../user/authentication/guards/bearer.guard';
@@ -19,10 +15,6 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import {
-  CreateRestaurantDto,
-  UpdateRestaurantDto,
-} from '../generated/dto/restaurant/dto';
 
 @ApiTags('Restaurant')
 @ApiBearerAuth('bearer')
@@ -49,7 +41,7 @@ export class RestaurantController {
   @Roles('ADMIN')
   @Post()
   @ApiBody({ type: () => CreateRestaurantDto })
-  async create(@Body() dto: Partial<Restaurant>) {
+  async create(@Body() dto: CreateRestaurantDto) {
     try {
       const newRestaurant = await this.restaurantService.create(dto);
 
@@ -70,7 +62,7 @@ export class RestaurantController {
   @Patch('/:id')
   @ApiParam({ name: 'id', type: 'string' })
   @ApiBody({ type: () => UpdateRestaurantDto })
-  async update(@Body() dto: Partial<Restaurant>, @Param('id') id: string) {
+  async update(@Body() dto: UpdateRestaurantDto, @Param('id') id: string) {
     try {
       const updatedRestaurant = await this.restaurantService.update(id, dto);
 
