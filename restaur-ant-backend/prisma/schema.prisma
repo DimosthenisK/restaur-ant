@@ -71,6 +71,8 @@ model Review {
   // @DtoUpdateOptional
   comment     String
   dateOfVisit DateTime
+  // @DtoUpdateOptional
+  status      ReviewStatus @default(PUBLISHED)
 
 
   restaurantId String
