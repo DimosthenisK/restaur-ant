@@ -43,8 +43,9 @@ export class AuthenticationService {
     return jwt.sign(
       {
         id: user.id,
+        name: user.name,
         email: user.email,
-        roles: user.role,
+        role: user.role,
         keepLoggedIn,
       },
       this.configService.get('JWT_SECRET'),
