@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import React from 'react';
 import Profile from './Profile';
 
 export default function Nav() {
-  const [profile, setProfile] = useState(false);
+  const { data: session } = useSession();
   return (
     <nav className="w-full mx-auto bg-white shadow relative z-20">
       <div className="justify-between container px-6 h-16 flex items-center lg:items-stretch mx-auto">
@@ -31,12 +32,16 @@ export default function Nav() {
             </h3>
           </div>
         </div>
-        <div className="h-full xl:flex items-center justify-end">
-          <div className="h-full flex items-center">
-            <div className="w-32 pr-16 h-full flex items-center justify-end border-r" />
-            <Profile />
+        {session?.user ? (
+          <div className="h-full xl:flex items-center justify-end">
+            <div className="h-full flex items-center">
+              <div className="w-32 pr-16 h-full flex items-center justify-end border-r" />
+              <Profile />
+            </div>
           </div>
-        </div>
+        ) : (
+          ""
+        )}
       </div>
     </nav>
   );

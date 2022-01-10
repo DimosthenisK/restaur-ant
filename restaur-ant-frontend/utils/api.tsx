@@ -1,45 +1,76 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
-export const getAuth = async (url: string, token: string) => {
-  const response = await axios
-    .get(url, { headers: { Authorization: `Bearer ${token}` } })
-    .catch((err) => err.response);
+export async function getAuth<T = any, K = any>(
+  url: string,
+  token: string
+): Promise<AxiosResponse<T, K>> {
+  const response = await axios.get(`${process.env["BACKEND_URL"]}${url}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-  return response.data;
-};
+  return response;
+}
 
-export const postAuth = async (url: string, data: any, token: string) => {
-  const response = await axios
-    .post(url, data, { headers: { Authorization: `Bearer ${token}` } })
-    .catch((err) => err.response);
+export async function postAuth<T = any, K = any>(
+  url: string,
+  data: any,
+  token: string
+): Promise<AxiosResponse<T, K>> {
+  const response = await axios.post(
+    `${process.env["BACKEND_URL"]}${url}`,
+    data,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
-  return response.data;
-};
+  return response;
+}
 
-export const patchAuth = async (url: string, data: any, token: string) => {
-  const response = await axios
-    .patch(url, data, { headers: { Authorization: `Bearer ${token}` } })
-    .catch((err) => err.response);
+export async function patchAuth<T = any, K = any>(
+  url: string,
+  data: any,
+  token: string
+): Promise<AxiosResponse<T, K>> {
+  const response = await axios.patch(
+    `${process.env["BACKEND_URL"]}${url}`,
+    data,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
 
-  return response.data;
-};
+  return response;
+}
 
-export const deleteAuth = async (url: string, data: any, token: string) => {
-  const response = await axios
-    .delete(url, { headers: { Authorization: `Bearer ${token}` } })
-    .catch((err) => err.response);
+export async function deleteAuth<T = any, K = any>(
+  url: string,
+  data: any,
+  token: string
+): Promise<AxiosResponse<T, K>> {
+  const response = await axios.delete(`${process.env["BACKEND_URL"]}${url}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
-  return response.data;
-};
+  return response;
+}
 
-export const get = async (url: string) => {
-  const response = await axios.get(url).catch((err) => err.response);
+export async function get<T = any, K = any>(
+  url: string
+): Promise<AxiosResponse<T, K>> {
+  const response = await axios.get(`${process.env["BACKEND_URL"]}${url}`);
 
-  return response.data;
-};
+  return response;
+}
 
-export const post = async (url: string, data: any) => {
-  const response = await axios.post(url, data).catch((err) => err.response);
+export async function post<T = any, K = any>(
+  url: string,
+  data: any
+): Promise<AxiosResponse<T, K>> {
+  const response = await axios.post(
+    `${process.env["BACKEND_URL"]}${url}`,
+    data
+  );
 
-  return response.data;
-};
+  return response;
+}
