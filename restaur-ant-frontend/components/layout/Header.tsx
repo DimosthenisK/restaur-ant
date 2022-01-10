@@ -22,7 +22,7 @@ export default function Layout({
               <h4 className="text-2xl font-bold leading-tight text-white mb-2">
                 {pageTitle}
               </h4>
-              <p className="flex items-center text-gray-300 text-xs">
+              <div className="flex items-center text-gray-300 text-xs">
                 <span>Home</span>
                 {breadcrumbs.map((breadcrumb) => (
                   <div key={breadcrumb}>
@@ -30,7 +30,7 @@ export default function Layout({
                     <span>{breadcrumb}</span>
                   </div>
                 ))}
-              </p>
+              </div>
             </div>
           </div>
           <div>
@@ -44,7 +44,7 @@ export default function Layout({
       {/* Page title ends */}
       <div className="container px-6 mx-auto">
         {/* Remove class [ h-64 ] when adding a card block */}
-        <div className="rounded shadow relative bg-white z-10 -mt-8 mb-8 w-full h-64">
+        <div className="rounded shadow relative bg-white z-10 -mt-8 mb-8 w-full p-5">
           {children}
         </div>
       </div>
