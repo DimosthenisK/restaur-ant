@@ -2,9 +2,8 @@ import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Restaurant } from '@prisma/client';
 import { CreateRestaurantDto, UpdateRestaurantDto } from './dtos/overrides';
 import { RestaurantService } from './restaurant.service';
-import { Roles } from '../user/authentication/decorators/roles.decorator';
-import { BearerAuthGuard } from '../user/authentication/guards/bearer.guard';
-import { RolesGuard } from '../user/authentication/guards/roles.guard';
+import { Roles } from '../user/authentication/decorators';
+import { BearerAuthGuard, RolesGuard } from '../user/authentication/guards';
 import {
   Body,
   Controller,

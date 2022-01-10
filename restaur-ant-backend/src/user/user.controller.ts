@@ -1,13 +1,10 @@
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { Request as ExpressRequest } from 'express';
-import { Anonymous } from './authentication/decorators/anonymous.decorator';
-import { Roles } from './authentication/decorators/roles.decorator';
-import { Self } from './authentication/decorators/self.decorator';
-import { BearerAuthGuard } from './authentication/guards/bearer.guard';
-import { RolesGuard } from './authentication/guards/roles.guard';
+import { Anonymous, Roles, Self } from './authentication/decorators';
+import { BearerAuthGuard, RolesGuard } from './authentication/guards';
+import { CreateUserDto, UpdateUserDto } from './dtos/overrides';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from '../generated/dto/user/dto';
 import {
   Body,
   Controller,
@@ -27,7 +24,7 @@ export class UserController {
   @Anonymous()
   @Post()
   @ApiBody({ type: () => CreateUserDto })
-  async create(@Body() dto: Partial<User>) {
+  async create(@Body() dto: CreateUserDto) {
     try {
       const newUser = await this.userService.create(dto);
 
@@ -49,7 +46,7 @@ export class UserController {
   @Patch()
   @ApiBody({ type: () => UpdateUserDto })
   async update(
-    @Body() dto: Partial<User>,
+    @Body() dto: UpdateUserDto,
     @Request() req: ExpressRequest & { user: User },
   ) {
     try {

@@ -3,9 +3,8 @@ import { User } from '@prisma/client';
 import { Request as ExpressRequest } from 'express';
 import { CreateReviewDto, UpdateReviewDto } from './dtos/overrides';
 import { ReviewService } from './review.service';
-import { Roles } from '../../user/authentication/decorators/roles.decorator';
-import { BearerAuthGuard } from '../../user/authentication/guards/bearer.guard';
-import { RolesGuard } from '../../user/authentication/guards/roles.guard';
+import { Roles } from '../../user/authentication/decorators';
+import { BearerAuthGuard, RolesGuard } from '../../user/authentication/guards';
 import {
   Body,
   Controller,
