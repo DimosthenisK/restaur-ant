@@ -1,4 +1,5 @@
 import { signOut, useSession } from 'next-auth/react';
+import Router from 'next/router';
 import React, { useState } from 'react';
 
 export default function Profile() {
@@ -8,6 +9,14 @@ export default function Profile() {
   if (!session) {
     return <></>;
   }
+
+  const handleSignOut = async () => {
+    const data = await signOut({
+      redirect: false,
+      callbackUrl: "/auth/signin",
+    });
+    Router.push(data.url);
+  };
 
   return (
     <div
@@ -43,7 +52,7 @@ export default function Profile() {
             </li>
             <li
               className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 flex items-center focus:text-indigo-700 focus:outline-none"
-              onClick={() => signOut()}
+              onClick={() => handleSignOut()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

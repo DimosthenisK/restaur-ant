@@ -1,64 +1,10 @@
 import { GetServerSideProps } from 'next';
-import { getCsrfToken, signIn as doSignIn } from 'next-auth/react';
 import Link from 'next/link';
-import Router from 'next/router';
-import { useForm } from 'react-hook-form';
 import Header from '../../components/layout/Header';
 
-export interface SignInProps {
-  csrfToken: string;
-}
-
-export interface LoginFormData {
-  email: string;
-  password: string;
-  csrfToken: string;
-}
-
-export interface LoginBadResponse {
-  error: string;
-  ok: false;
-  status: number;
-  url: null;
-}
-export interface LoginOKResponse {
-  error: null;
-  ok: true;
-  status: number;
-  url: string;
-}
-
-export default function SignIn({ csrfToken }: SignInProps) {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setError,
-    clearErrors,
-    formState: { errors },
-  } = useForm();
-
-  const handleFormSubmit = async (data: LoginFormData) => {
-    try {
-      const response = await doSignIn<"credentials">("credentials", {
-        redirect: false,
-        email: data.email,
-        password: data.password,
-        csrfToken: data.csrfToken,
-      });
-
-      if (response && response.ok) {
-        Router.push("/");
-      } else throw new Error("User or password incorrect");
-    } catch (err: any) {
-      setError("global", {
-        type: "manual",
-        message: err.message,
-      });
-    }
-  };
+export default function SignUp() {
   return (
-    <Header pageTitle="Sign In" breadcrumbs={["Authentication", "Sign In"]}>
+    <Header pageTitle="Sign Up" breadcrumbs={["Authentication", "Sign Up"]}>
       <div className="h-full pb-16 pt-4">
         <div className="flex flex-col items-center justify-center">
           <svg
@@ -83,40 +29,31 @@ export default function SignIn({ csrfToken }: SignInProps) {
             <p
               tabIndex={0}
               role="heading"
-              aria-label="Login to your account"
+              aria-label="Sign up for RestaurAnt"
               className="text-2xl font-bold leading-6 text-white"
             >
-              Login to your account
+              Sign up for RestaurAnt
             </p>
             <p className="text-sm mt-4 font-medium leading-none text-white">
-              Dont have account?{" "}
-              <Link href="/auth/signup">
+              Already have account?{" "}
+              <Link href="/auth/signin">
                 <a
                   tabIndex={0}
                   role="link"
-                  aria-label="Sign up here"
+                  aria-label="Sign in here"
                   className="text-sm font-medium leading-none underline text-white cursor-pointer"
                 >
                   {" "}
-                  Sign up here
+                  Sign in here
                 </a>
               </Link>
             </p>
-            <form onSubmit={handleSubmit(handleFormSubmit)}>
-              <input
-                type="hidden"
-                {...register("csrfToken", { required: true, value: csrfToken })}
-              />
+            <form method="post" action="/api/auth/callback/credentials">
               <div className="mt-3">
                 <label className="text-sm font-medium leading-none text-white">
                   Email
                 </label>
                 <input
-                  {...register("email", {
-                    required: true,
-                    minLength: 3,
-                    maxLength: 255,
-                  })}
                   aria-label="enter email adress"
                   role="input"
                   type="email"
@@ -130,11 +67,6 @@ export default function SignIn({ csrfToken }: SignInProps) {
                 </label>
                 <div className="relative flex items-center justify-center">
                   <input
-                    {...register("password", {
-                      required: true,
-                      minLength: 8,
-                      maxLength: 255,
-                    })}
                     aria-label="enter Password"
                     role="input"
                     type="password"
@@ -143,23 +75,13 @@ export default function SignIn({ csrfToken }: SignInProps) {
                   />
                 </div>
               </div>
-              <div className="mt-5">
-                <div className="pb-1">
-                  <p
-                    className={`text-center text-white ${
-                      errors.global || "invisible"
-                    }`}
-                  >
-                    {errors.global?.message || "Global Errors"}
-                  </p>
-                </div>
+              <div className="mt-8">
                 <button
                   role="button"
-                  aria-label="Sign In"
+                  aria-label="create my account"
                   className="focus:ring-2 focus:ring-offset-2 focus:ring-red-800 text-sm font-semibold leading-none text-white focus:outline-none bg-red-800 border rounded hover:bg-red-900 py-4 w-full"
-                  onClick={() => clearErrors()}
                 >
-                  Sign In
+                  Create my account
                 </button>
               </div>
             </form>
@@ -172,8 +94,6 @@ export default function SignIn({ csrfToken }: SignInProps) {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
-    props: {
-      csrfToken: await getCsrfToken(context),
-    },
+    props: {},
   };
 };

@@ -19,6 +19,23 @@ export type UserLoginResponse = UserLoginOKResponse | UserLoginErrorResponse;
 export default NextAuth({
   secret: "secret",
   pages: { signIn: "/auth/signin" },
+  callbacks: {
+    async jwt({ token, user, account, profile, isNewUser }) {
+      if (user) {
+        token.backToken = user?.token as string;
+        token.name = user?.name as string;
+        token.role = user?.role as "USER" | "ADMIN";
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.backToken = token.backToken;
+      session.user.id = token.sub as string;
+      session.user.name = token.name;
+      session.user.role = token.role;
+      return session;
+    },
+  },
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
@@ -32,6 +49,7 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
         keepLoggedIn: { label: "Remember me", type: "checkbox" },
       },
+
       async authorize(credentials, req) {
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
@@ -47,16 +65,18 @@ export default NextAuth({
           const userLoginResponseData = userLoginResponse.data;
 
           if (userLoginResponseData.success) {
-            console.log(userLoginResponseData);
             const user = decode(userLoginResponseData.token, {
               json: true,
             });
-            return user;
-          } else throw userLoginResponseData.reason;
+            if (user) {
+              user.token = userLoginResponseData.token;
+              return user;
+            }
+          }
         } catch (err) {
           console.error(err);
-          throw err;
         }
+        return null;
       },
     }),
   ],
