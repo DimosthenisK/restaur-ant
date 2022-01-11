@@ -45,7 +45,6 @@ export async function patchAuth<T = any, K = any>(
 
 export async function deleteAuth<T = any, K = any>(
   url: string,
-  data: any,
   token: string
 ): Promise<AxiosResponse<T, K>> {
   const response = await axios.delete(`${process.env["BACKEND_URL"]}${url}`, {
