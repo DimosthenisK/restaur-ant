@@ -44,7 +44,7 @@ export default function Layout({
       {/* Page title ends */}
       <div className="container px-6 mx-auto">
         {/* Remove class [ h-64 ] when adding a card block */}
-        <div className="rounded shadow relative bg-white z-10 -mt-8 mb-8 w-full p-5">
+        <div className="rounded shadow-lg relative bg-white z-10 -mt-8 mb-8 w-full p-5">
           {children}
         </div>
       </div>
