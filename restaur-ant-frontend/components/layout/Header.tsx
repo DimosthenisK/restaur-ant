@@ -16,8 +16,8 @@ export default function Layout({
   return (
     <>
       <div className="bg-red-800 pt-8 pb-16 relative z-10">
-        <div className="container px-6 mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between">
-          <div className="flex-col flex lg:flex-row items-start lg:items-center">
+        <div className="container px-6 mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between">
+          <div className="flex-col flex sm:flex-row items-start sm:items-center">
             <div className="ml-0 my-6 lg:my-0">
               <h4 className="text-2xl font-bold leading-tight text-white mb-2">
                 {pageTitle}

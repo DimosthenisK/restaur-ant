@@ -38,7 +38,6 @@ export default function Nav() {
         {session?.user ? (
           <div className="h-full xl:flex items-center justify-end">
             <div className="h-full flex items-center">
-              <div className="w-16 h-full flex items-center justify-end border-r" />
               <Profile />
             </div>
           </div>
