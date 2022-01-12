@@ -1,4 +1,3 @@
-import { Restaurant } from '@prisma/client';
 import { CreateRestaurantDto, UpdateRestaurantDto } from './dtos/overrides';
 import { RestaurantService } from './restaurant.service';
 import { Roles } from '../user/authentication/decorators';
@@ -23,8 +22,9 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
-  FindOneNotFoundRestaurantDto,
-  FindOneSuccessRestaurantDto,
+  FindManyRestaurantOkResponse,
+  FindOneRestaurantNotFoundResponse,
+  FindOneRestaurantOkResponse,
 } from './dtos/responses';
 
 @ApiTags('Restaurant')
@@ -36,19 +36,26 @@ export class RestaurantController {
 
   @Get('/:page(\\d+)')
   @ApiParam({ name: 'page', type: 'number' })
-  async findAll(@Param('page') page: number): Promise<Restaurant[]> {
+  @ApiOkResponse({ type: () => FindManyRestaurantOkResponse })
+  async findAll(
+    @Param('page') page: number,
+  ): Promise<FindManyRestaurantOkResponse> {
     if (page <= 0) page = 1;
     page--;
-    return this.restaurantService.findAll(page * 20, 20);
+    return {
+      success: true,
+      page: page + 1,
+      data: await this.restaurantService.findAll(page * 12, 12),
+    };
   }
 
   @Get('/:id')
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiOkResponse({ type: () => FindOneSuccessRestaurantDto })
-  @ApiNotFoundResponse({ type: () => FindOneNotFoundRestaurantDto })
+  @ApiOkResponse({ type: () => FindOneRestaurantOkResponse })
+  @ApiNotFoundResponse({ type: () => FindOneRestaurantNotFoundResponse })
   async findOne(
     @Param('id') id: string,
-  ): Promise<FindOneSuccessRestaurantDto | FindOneNotFoundRestaurantDto> {
+  ): Promise<FindOneRestaurantOkResponse | FindOneRestaurantNotFoundResponse> {
     const restaurant = await this.restaurantService.findOne(id);
     if (restaurant) {
       return { success: true, data: restaurant };

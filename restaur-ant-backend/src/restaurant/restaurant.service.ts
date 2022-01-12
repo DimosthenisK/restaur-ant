@@ -6,12 +6,21 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class RestaurantService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findAll(skip: number, take: number): Promise<Restaurant[]> {
-    return this.prismaService.restaurant.findMany({
-      skip,
-      take,
-      where: { status: RestaurantStatus.ACTIVE },
-    });
+  async findAll(
+    skip: number,
+    take: number,
+  ): Promise<Array<Restaurant & { _avgrating: number | null }>> {
+    const getRestaurants = await this.prismaService.$queryRaw<
+      Array<Restaurant & { _avgrating: number | null }>
+    >`
+      SELECT "Restaurant".*, AVG("Review".rating) as _avgrating
+      FROM "Restaurant"
+      LEFT JOIN "Review" ON "Review"."restaurantId" = "Restaurant".id
+      WHERE "Restaurant".status = 'ACTIVE'
+      GROUP BY "Restaurant".id
+      ORDER BY _avgrating DESC
+      LIMIT ${take} OFFSET ${skip}`;
+    return getRestaurants;
   }
 
   async findOne(id: string): Promise<Restaurant> {
