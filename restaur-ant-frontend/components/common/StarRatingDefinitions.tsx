@@ -1,4 +1,20 @@
-export const StarRatingDefinitions = () => {
+export interface StarRatingDefinitionsProps {
+  fillColor?: string;
+  emptyColor?: string;
+}
+
+export const StarRatingDefinitions = ({
+  fillColor,
+  emptyColor,
+}: StarRatingDefinitionsProps) => {
+  if (!fillColor) {
+    fillColor = "991b1b";
+  }
+  if (!emptyColor) {
+    emptyColor = "bd9393";
+  }
+  fillColor = `#${fillColor}`;
+  emptyColor = `#${emptyColor}`;
   return (
     <svg
       style={{ width: 0, height: 0 }}
@@ -7,14 +23,14 @@ export const StarRatingDefinitions = () => {
     >
       <defs>
         <linearGradient id="empty" x1="0" x2="100%" y1="0" y2="0">
-          <stop offset="100%" stopColor="#bd9393"></stop>
+          <stop offset="100%" stopColor={emptyColor}></stop>
         </linearGradient>
         <linearGradient id="half" x1="0" x2="100%" y1="0" y2="0">
-          <stop offset="50%" stopColor="#991b1b"></stop>
-          <stop offset="50%" stopColor="#bd9393"></stop>
+          <stop offset="50%" stopColor={fillColor}></stop>
+          <stop offset="50%" stopColor={emptyColor}></stop>
         </linearGradient>
         <linearGradient id="full" x1="0" x2="100%" y1="0" y2="0">
-          <stop offset="50%" stopColor="#991b1b"></stop>
+          <stop offset="50%" stopColor={fillColor}></stop>
         </linearGradient>
 
         <symbol

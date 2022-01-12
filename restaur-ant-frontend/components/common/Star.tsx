@@ -1,8 +1,10 @@
 export interface StarProps {
   fill: number;
+  size?: number;
 }
 
-export const Star = ({ fill }: StarProps) => {
+export const Star = ({ fill, size }: StarProps) => {
+  if (!size) size = 24;
   let fillTag = "empty";
   if (fill === 1) {
     fillTag = "full";
@@ -10,7 +12,12 @@ export const Star = ({ fill }: StarProps) => {
     fillTag = "half";
   }
   return (
-    <svg className="c-star active" width="24" height="24" viewBox="0 0 24 24">
+    <svg
+      className="c-star active"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+    >
       <use xlinkHref="#star" fill={`url(#${fillTag})`}></use>
     </svg>
   );
