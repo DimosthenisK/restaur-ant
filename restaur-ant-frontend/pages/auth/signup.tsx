@@ -1,10 +1,70 @@
 import { GetServerSideProps } from 'next';
+import { getCsrfToken } from 'next-auth/react';
 import Link from 'next/link';
+import Router from 'next/router';
+import { useForm } from 'react-hook-form';
 import Header from '../../components/layout/Header';
+import { post } from '../../utils/api';
 
-export default function SignUp() {
+export interface SignUpProps {
+  csrfToken: string;
+}
+
+export interface RegisterFormData {
+  name: string;
+  email: string;
+  password: string;
+  csrfToken: string;
+}
+
+export interface RegisterBadResponse {
+  error: string;
+  ok: false;
+  status: number;
+  url: null;
+}
+export interface RegisterOKResponse {
+  error: null;
+  ok: true;
+  status: number;
+  url: string;
+}
+
+export default function SignUp({ csrfToken }: SignUpProps) {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm();
+
+  const handleFormSubmit = async (data: RegisterFormData) => {
+    try {
+      const response = await post<RegisterOKResponse | RegisterBadResponse>(
+        "/user",
+        {
+          redirect: false,
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          csrfToken: data.csrfToken,
+        }
+      );
+
+      if (response && response.status === 201) {
+        Router.push("/auth/signin?message=Thank you, you may now sign in.");
+      } else throw new Error("Email already exists");
+    } catch (err: any) {
+      setError("global", {
+        type: "manual",
+        message: err.message,
+      });
+    }
+  };
   return (
-    <Header pageTitle="Sign Up" breadcrumbs={["Authentication", "Sign Up"]}>
+    <Header pageTitle="Sign In" breadcrumbs={["Authentication", "Sign In"]}>
       <div className="h-full pb-16 pt-4">
         <div className="flex flex-col items-center justify-center">
           <svg
@@ -26,13 +86,8 @@ export default function SignUp() {
             />
           </svg>
           <div className="bg-white shadow-xl rounded  xl:w-1/3 lg:w-1/2 md:w-3/5 sm:w-4/5 w-full p-10 mt-8 bg-red-800">
-            <p
-              tabIndex={0}
-              role="heading"
-              aria-label="Sign up for RestaurAnt"
-              className="text-2xl font-bold leading-6 text-white"
-            >
-              Sign up for RestaurAnt
+            <p tabIndex={0} className="text-2xl font-bold leading-6 text-white">
+              Create an account for RestaurAnt
             </p>
             <p className="text-sm mt-4 font-medium leading-none text-white">
               Already have account?{" "}
@@ -40,7 +95,6 @@ export default function SignUp() {
                 <a
                   tabIndex={0}
                   role="link"
-                  aria-label="Sign in here"
                   className="text-sm font-medium leading-none underline text-white cursor-pointer"
                 >
                   {" "}
@@ -48,12 +102,38 @@ export default function SignUp() {
                 </a>
               </Link>
             </p>
-            <form method="post" action="/api/auth/callback/credentials">
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
+              <input
+                type="hidden"
+                {...register("csrfToken", { required: true, value: csrfToken })}
+              />
+              <div className="mt-3">
+                <label className="text-sm font-medium leading-none text-white">
+                  Name
+                </label>
+                <input
+                  {...register("name", {
+                    required: true,
+                    minLength: 3,
+                    maxLength: 255,
+                  })}
+                  aria-label="enter name"
+                  role="input"
+                  type="text"
+                  name="name"
+                  className="bg-gray-200 border rounded focus:outline-none text-sm font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
+                />
+              </div>
               <div className="mt-3">
                 <label className="text-sm font-medium leading-none text-white">
                   Email
                 </label>
                 <input
+                  {...register("email", {
+                    required: true,
+                    minLength: 3,
+                    maxLength: 255,
+                  })}
                   aria-label="enter email adress"
                   role="input"
                   type="email"
@@ -61,12 +141,17 @@ export default function SignUp() {
                   className="bg-gray-200 border rounded focus:outline-none text-sm font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
                 />
               </div>
-              <div className="mt-6  w-full">
+              <div className="mt-3">
                 <label className="text-sm font-medium leading-none text-white">
                   Password
                 </label>
                 <div className="relative flex items-center justify-center">
                   <input
+                    {...register("password", {
+                      required: true,
+                      minLength: 8,
+                      maxLength: 255,
+                    })}
                     aria-label="enter Password"
                     role="input"
                     type="password"
@@ -75,13 +160,23 @@ export default function SignUp() {
                   />
                 </div>
               </div>
-              <div className="mt-8">
+              <div className="mt-5">
+                <div className="pb-1">
+                  <p
+                    className={`text-center text-white ${
+                      errors.global || "invisible"
+                    }`}
+                  >
+                    {errors.global?.message || "Global Errors"}
+                  </p>
+                </div>
                 <button
                   role="button"
-                  aria-label="create my account"
+                  aria-label="Sign In"
                   className="focus:ring-2 focus:ring-offset-2 focus:ring-red-800 text-sm font-semibold leading-none text-white focus:outline-none bg-red-800 border rounded hover:bg-red-900 py-4 w-full"
+                  onClick={() => clearErrors()}
                 >
-                  Create my account
+                  Sign Up
                 </button>
               </div>
             </form>
@@ -94,6 +189,8 @@ export default function SignUp() {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
-    props: {},
+    props: {
+      csrfToken: await getCsrfToken(context),
+    },
   };
 };

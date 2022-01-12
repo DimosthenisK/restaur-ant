@@ -46,7 +46,7 @@ export class ReviewController {
       const newReview = await this.reviewService.create(
         userId,
         restaurantId,
-        dto,
+        Object.assign(dto, { dateOfVisit: new Date(dto.dateOfVisit) }),
       );
 
       return {

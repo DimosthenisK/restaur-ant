@@ -1,10 +1,9 @@
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
-import { StarRatingDefinitions } from '../../components/common';
-import Header from '../../components/layout/Header';
+import Header from '../../../components/layout/Header';
 import type { GetServerSideProps, NextPage } from "next";
 
-export interface props {
+export interface RestaurantEditProps {
   restaurant: {
     id: string;
     name: string;
@@ -13,14 +12,11 @@ export interface props {
   };
 }
 
-const RestaurantView: NextPage = ({ restaurant }: props) => {
+const RestaurantEdit: NextPage<RestaurantEditProps> = ({ restaurant }) => {
   const { data: session, status } = useSession({ required: true });
 
   return (
-    <Header
-      pageTitle={restaurant.name}
-      breadcrumbs={["Restaurants", restaurant.name]}
-    >
+    <>
       <Head>
         <title>RestaurAnt</title>
         <meta
@@ -29,12 +25,26 @@ const RestaurantView: NextPage = ({ restaurant }: props) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <StarRatingDefinitions />
-    </Header>
+      <Header
+        pageTitle={restaurant.name}
+        breadcrumbs={["Restaurants", restaurant.name]}
+      ></Header>
+    </>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log(context.params);
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/auth/signin",
+      },
+    };
+  }
+
   return {
     props: {
       restaurant: {
@@ -47,4 +57,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   };
 };
 
-export default RestaurantView;
+export default RestaurantEdit;

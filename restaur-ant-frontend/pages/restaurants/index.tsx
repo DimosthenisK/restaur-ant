@@ -1,16 +1,30 @@
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
-import { StarRatingDefinitions } from '../../components/common';
+import Router from 'next/router';
+import { ActionButton, StarRatingDefinitions } from '../../components/common';
 import { Restaurant } from '../../components/index/Restaurant';
 import Header from '../../components/layout/Header';
+import { getAuth } from '../../utils/api';
 import type { GetServerSideProps, NextPage } from "next";
 
 export interface RestaurantsListProps {
   restaurants: any[];
-  children: any[];
 }
 
 const RestaurantsList: NextPage<RestaurantsListProps> = ({ restaurants }) => {
+  const { data: session, status } = useSession({ required: true });
+
+  let actions;
+  if (session && session.user.role === "ADMIN") {
+    actions = (
+      <div className="flex">
+        <ActionButton
+          onClick={() => Router.push(`/restaurants/add`)}
+          label="Add"
+        />
+      </div>
+    );
+  }
   return (
     <>
       <Head>
@@ -21,7 +35,11 @@ const RestaurantsList: NextPage<RestaurantsListProps> = ({ restaurants }) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Header pageTitle="Restaurants" breadcrumbs={["Restaurants"]}>
+      <Header
+        pageTitle="Restaurants"
+        breadcrumbs={["Restaurants"]}
+        actions={actions}
+      >
         <div>
           <StarRatingDefinitions />
           <div className="flex flex-row justify-center flex-wrap w-full">
@@ -30,7 +48,7 @@ const RestaurantsList: NextPage<RestaurantsListProps> = ({ restaurants }) => {
                 <Restaurant
                   id={restaurant.id}
                   name={restaurant.name}
-                  rating={restaurant.rating}
+                  rating={restaurant._avgrating}
                   description={restaurant.description}
                 ></Restaurant>
               </div>
@@ -52,37 +70,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+  try {
+    const getRestaurantsResponse = await getAuth(
+      `/restaurant/1`,
+      session.backToken
+    );
+    if (!getRestaurantsResponse.data.success) {
+      throw getRestaurantsResponse.data.message;
+    }
+    console.log(getRestaurantsResponse.data);
 
-  return {
-    props: {
-      restaurants: [
-        {
-          id: "1",
-          name: "Restaurant 1",
-          rating: 4.5,
-          description: "This is a description for Restaurant 1",
-        },
-        {
-          id: "2",
-          name: "Restaurant 2",
-          rating: 3,
-          description: "This is a description for Restaurant 2",
-        },
-        {
-          id: "3",
-          name: "Restaurant 3",
-          rating: 3.4,
-          description: "This is a description for Restaurant 3",
-        },
-        {
-          id: "4",
-          name: "Restaurant 4",
-          rating: 5,
-          description: "This is a description for Restaurant 4",
-        },
-      ],
-    },
-  };
+    return {
+      props: {
+        restaurants: getRestaurantsResponse.data.data,
+      },
+    };
+  } catch (err) {
+    console.error(err);
+    return {
+      notFound: true,
+    };
+  }
 };
 
 export default RestaurantsList;
