@@ -1,10 +1,10 @@
-import { ApiBearerAuth, ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Restaurant } from '@prisma/client';
 import { CreateRestaurantDto, UpdateRestaurantDto } from './dtos/overrides';
 import { RestaurantService } from './restaurant.service';
 import { Roles } from '../user/authentication/decorators';
 import { BearerAuthGuard, RolesGuard } from '../user/authentication/guards';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -14,6 +14,18 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  FindOneNotFoundRestaurantDto,
+  FindOneSuccessRestaurantDto,
+} from './dtos/responses';
 
 @ApiTags('Restaurant')
 @ApiBearerAuth('bearer')
@@ -32,8 +44,21 @@ export class RestaurantController {
 
   @Get('/:id')
   @ApiParam({ name: 'id', type: 'string' })
-  async findOne(@Param('id') id: string): Promise<Restaurant> {
-    return this.restaurantService.findOne(id);
+  @ApiOkResponse({ type: () => FindOneSuccessRestaurantDto })
+  @ApiNotFoundResponse({ type: () => FindOneNotFoundRestaurantDto })
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<FindOneSuccessRestaurantDto | FindOneNotFoundRestaurantDto> {
+    const restaurant = await this.restaurantService.findOne(id);
+    if (restaurant) {
+      return { success: true, data: restaurant };
+    } else {
+      throw new BadRequestException({
+        success: false,
+        message: 'Restaurant not found',
+        errorCode: 'RESTAURANT_NOT_FOUND',
+      });
+    }
   }
 
   @UseGuards(RolesGuard)
