@@ -26,7 +26,10 @@ export class ReviewController {
   @ApiParam({ name: 'restaurantId', type: 'string' })
   @Get('')
   async findAll(@Param('restaurantId') restaurantId: string): Promise<any> {
-    return this.reviewService.findForRestaurant(restaurantId);
+    return {
+      success: true,
+      data: await this.reviewService.findForRestaurant(restaurantId),
+    };
   }
 
   @Post()

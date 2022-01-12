@@ -7,6 +7,15 @@ export class ReviewService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findForRestaurant(restaurantId: string) {
+    const getTotalReviews = async () => {
+      const reviewsCount = await this.prismaService.review.count({
+        where: {
+          restaurantId,
+          status: ReviewStatus.PUBLISHED,
+        },
+      });
+      return reviewsCount;
+    };
     const getAverageRating = async () => {
       const reviews = await this.prismaService.review.aggregate({
         _avg: {
@@ -22,7 +31,7 @@ export class ReviewService {
 
       return reviews._avg.rating;
     };
-    const getHighestRated = async () => {
+    const getHighestReview = async () => {
       return this.prismaService.review.findFirst({
         where: {
           status: {
@@ -31,9 +40,10 @@ export class ReviewService {
           restaurantId: { equals: restaurantId },
         },
         orderBy: [{ rating: 'desc' }],
+        include: { user: { select: { name: true } } },
       });
     };
-    const getLowestRated = async () => {
+    const getLowestReview = async () => {
       return this.prismaService.review.findFirst({
         where: {
           status: {
@@ -42,6 +52,7 @@ export class ReviewService {
           restaurantId: { equals: restaurantId },
         },
         orderBy: [{ rating: 'asc' }],
+        include: { user: { select: { name: true } } },
       });
     };
     const getLatest = async () => {
@@ -53,13 +64,15 @@ export class ReviewService {
           restaurantId: { equals: restaurantId },
         },
         orderBy: [{ createdAt: 'desc' }],
+        include: { user: { select: { name: true } } },
       });
     };
 
     return {
       averageRating: await getAverageRating(),
-      highestRated: await getHighestRated(),
-      lowestRated: await getLowestRated(),
+      totalReviews: await getTotalReviews(),
+      highestReview: await getHighestReview(),
+      lowestReview: await getLowestReview(),
       latest: await getLatest(),
     };
   }
