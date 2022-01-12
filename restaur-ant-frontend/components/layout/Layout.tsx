@@ -8,7 +8,7 @@ interface props {
 export default function Layout({ children }: props) {
   return (
     <>
-      <div className="bg-gray-200 pb-10 h-full">
+      <div className="bg-gray-200 pb-10 h-full min-h-screen">
         <Nav />
         {children}
       </div>
