@@ -18,7 +18,7 @@ export class RestaurantService {
       LEFT JOIN "Review" ON "Review"."restaurantId" = "Restaurant".id
       WHERE "Restaurant".status = 'ACTIVE'
       GROUP BY "Restaurant".id
-      ORDER BY _avgrating DESC
+      ORDER BY _avgrating DESC NULLS LAST
       LIMIT ${take} OFFSET ${skip}`;
     return getRestaurants;
   }
