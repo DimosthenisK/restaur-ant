@@ -77,6 +77,18 @@ export class ReviewService {
     };
   }
 
+  async findAllForRestaurant(restaurantId: string): Promise<Review[]> {
+    return this.prismaService.review.findMany({
+      where: {
+        restaurantId: {
+          equals: restaurantId,
+        },
+      },
+      orderBy: [{ createdAt: 'desc' }],
+      include: { user: { select: { id: true, name: true } } },
+    });
+  }
+
   async create(
     userId: string,
     restaurantId: string,

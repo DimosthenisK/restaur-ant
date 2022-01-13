@@ -25,10 +25,19 @@ export class ReviewController {
 
   @ApiParam({ name: 'restaurantId', type: 'string' })
   @Get('')
-  async findAll(@Param('restaurantId') restaurantId: string): Promise<any> {
+  async findCurated(@Param('restaurantId') restaurantId: string): Promise<any> {
     return {
       success: true,
       data: await this.reviewService.findForRestaurant(restaurantId),
+    };
+  }
+
+  @ApiParam({ name: 'restaurantId', type: 'string' })
+  @Get('/all')
+  async findAll(@Param('restaurantId') restaurantId: string): Promise<any> {
+    return {
+      success: true,
+      data: await this.reviewService.findAllForRestaurant(restaurantId),
     };
   }
 

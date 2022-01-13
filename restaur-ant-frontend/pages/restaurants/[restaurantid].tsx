@@ -56,6 +56,10 @@ const RestaurantView: NextPage<RestaurantViewProps> = ({
     actions = (
       <div className="flex">
         <ActionButton
+          onClick={() => Router.push(`/restaurants/${restaurant.id}/reviews`)}
+          label="View all reviews"
+        />
+        <ActionButton
           onClick={() => Router.push(`/restaurants/${restaurant.id}/edit`)}
           label="Edit"
         />
@@ -86,12 +90,12 @@ const RestaurantView: NextPage<RestaurantViewProps> = ({
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <StarRatingDefinitions fillColor="fff" />
       <Header
         pageTitle={restaurant.name}
         breadcrumbs={["Restaurants", restaurant.name]}
         actions={actions}
       >
-        <StarRatingDefinitions fillColor="fff" />
         {reviews.latest ? (
           <div className="flex flex-row flex-wrap items-center">
             <div className="w-full lg:w-1/2">
