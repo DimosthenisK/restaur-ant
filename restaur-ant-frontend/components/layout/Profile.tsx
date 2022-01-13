@@ -1,4 +1,5 @@
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import Router from 'next/router';
 import React, { useState } from 'react';
 
@@ -30,25 +31,27 @@ export default function Profile() {
         {showProfileOptions && (
           <ul className="p-2 w-full border-r bg-white absolute rounded z-40 shadow mt-44 ">
             <li className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none">
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="icon icon-tabler icon-tabler-user"
-                  width={20}
-                  height={20}
-                  viewBox="0 0 24 24"
-                  strokeWidth={1}
-                  stroke="currentColor"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path stroke="none" d="M0 0h24v24H0z" />
-                  <circle cx={12} cy={7} r={4} />
-                  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                </svg>
-                <span className="ml-2">My Profile</span>
-              </div>
+              <Link href="/me">
+                <div className="flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="icon icon-tabler icon-tabler-user"
+                    width={20}
+                    height={20}
+                    viewBox="0 0 24 24"
+                    strokeWidth={1}
+                    stroke="currentColor"
+                    fill="none"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <circle cx={12} cy={7} r={4} />
+                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                  </svg>
+                  <span className="ml-2">My Profile</span>
+                </div>
+              </Link>
             </li>
             <li
               className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 flex items-center focus:text-indigo-700 focus:outline-none"
@@ -78,7 +81,7 @@ export default function Profile() {
           src={`https://eu.ui-avatars.com/api/?background=991b1b&color=fff&name=${session.user?.name}`}
           alt="avatar"
         />
-        <p className="text-gray-800 text-sm ml-3 mr-5">Dimosthenis Kalaitzis</p>
+        <p className="text-gray-800 text-sm ml-3 mr-5">{session.user.name}</p>
       </div>
     </div>
   );
