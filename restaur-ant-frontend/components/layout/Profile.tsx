@@ -30,7 +30,7 @@ export default function Profile() {
       >
         {showProfileOptions && (
           <ul className="p-2 w-full border-r bg-white absolute rounded z-40 shadow mt-44 ">
-            <li className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none">
+            <li className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-red-800 focus:text-red-800 focus:outline-none">
               <Link href="/me">
                 <div className="flex items-center">
                   <svg
@@ -53,8 +53,33 @@ export default function Profile() {
                 </div>
               </Link>
             </li>
+            {session.user.role === "ADMIN" && (
+              <li className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-red-800 focus:text-red-800 focus:outline-none">
+                <Link href="/users">
+                  <div className="flex items-center">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="icon icon-tabler icon-tabler-user"
+                      width={20}
+                      height={20}
+                      viewBox="0 0 24 24"
+                      strokeWidth={1}
+                      stroke="currentColor"
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path stroke="none" d="M0 0h24v24H0z" />
+                      <circle cx={12} cy={7} r={4} />
+                      <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                    </svg>
+                    <span className="ml-2">View all users</span>
+                  </div>
+                </Link>
+              </li>
+            )}
             <li
-              className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 flex items-center focus:text-indigo-700 focus:outline-none"
+              className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-red-800 flex items-center focus:text-red-800 focus:outline-none"
               onClick={() => handleSignOut()}
             >
               <svg

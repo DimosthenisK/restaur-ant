@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserStatus } from '@prisma/client';
+import { Role, User, UserStatus } from '@prisma/client';
 import { EncryptionService } from './authentication/encryption/encryption.service';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -9,6 +9,18 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly encryptionService: EncryptionService,
   ) {}
+
+  async findAll(): Promise<User[]> {
+    return this.prismaService.user.findMany({
+      where: { status: UserStatus.ACTIVE },
+    });
+  }
+
+  async findOne(id: string): Promise<User> {
+    return this.prismaService.user.findUnique({
+      where: { id },
+    });
+  }
 
   async create(dtoUser: Partial<User>): Promise<User> {
     const user: User = {
@@ -40,10 +52,9 @@ export class UserService {
       if (dtoUser.password && dtoUser.password !== user.password)
         dtoUser.password = await this.encryptionService.hash(dtoUser.password);
 
-      const sanitaryUser: User = {
-        ...user,
-        email: dtoUser.email,
-        name: dtoUser.name,
+      const sanitaryUser: Partial<User> = {
+        email: dtoUser.email === user.email ? undefined : dtoUser.email,
+        name: dtoUser.name === user.name ? undefined : dtoUser.name,
         password: dtoUser.password,
       };
 
@@ -55,12 +66,29 @@ export class UserService {
 
         return updatedUser;
       } catch (err) {
+        console.log(err);
         if (
           err.message.includes(
             'Unique constraint failed on the fields: (`email`)',
           )
         )
           throw new Error('USER_ALREADY_EXISTS');
+        throw err;
+      }
+    } else throw new Error('USER_NOT_FOUND');
+  }
+
+  async updateRole(id: string, newRole: Role): Promise<User> {
+    const user = await this.findOneByID(id);
+    if (user) {
+      try {
+        const updatedUser = await this.prismaService.user.update({
+          data: { role: newRole },
+          where: { id },
+        });
+
+        return updatedUser;
+      } catch (err) {
         throw err;
       }
     } else throw new Error('USER_NOT_FOUND');

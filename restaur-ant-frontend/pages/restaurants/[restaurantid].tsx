@@ -33,7 +33,7 @@ const RestaurantView: NextPage<RestaurantViewProps> = ({
     isShowing: isSomethingWentWrongModalShowing,
     toggle: toggleSomethingWentWrongModal,
   } = useModal(false);
-  console.log(session);
+
   const deleteHandler = async () => {
     try {
       const deleteResponse = await deleteAuth(
@@ -55,10 +55,12 @@ const RestaurantView: NextPage<RestaurantViewProps> = ({
   if (session && session.user.role === "ADMIN") {
     actions = (
       <div className="flex">
-        <ActionButton
-          onClick={() => Router.push(`/restaurants/${restaurant.id}/reviews`)}
-          label="View all reviews"
-        />
+        {reviews.latest && (
+          <ActionButton
+            onClick={() => Router.push(`/restaurants/${restaurant.id}/reviews`)}
+            label="View all reviews"
+          />
+        )}
         <ActionButton
           onClick={() => Router.push(`/restaurants/${restaurant.id}/edit`)}
           label="Edit"
@@ -290,7 +292,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!getRestaurantResponse.data.success) {
       throw getRestaurantResponse.data.message;
     }
-    console.log(getRestaurantResponse.data);
 
     const getReviewsResponse = await getAuth(
       `/restaurant/${context.params?.restaurantid}/review`,
@@ -299,7 +300,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!getReviewsResponse.data.success) {
       throw getReviewsResponse.data.message;
     }
-    console.log(getReviewsResponse.data);
 
     return {
       props: {
