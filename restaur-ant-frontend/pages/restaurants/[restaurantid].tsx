@@ -71,6 +71,10 @@ const RestaurantView: NextPage<RestaurantViewProps> = ({
     actions = (
       <div className="flex">
         <ActionButton
+          onClick={() => Router.push(`/restaurants/${restaurant.id}/reviews`)}
+          label="View all reviews"
+        />
+        <ActionButton
           onClick={() =>
             Router.push(`/restaurants/${restaurant.id}/reviews/add`)
           }

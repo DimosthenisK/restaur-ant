@@ -83,8 +83,18 @@ export class ReviewService {
         restaurantId: {
           equals: restaurantId,
         },
+        status: { equals: ReviewStatus.PUBLISHED },
       },
       orderBy: [{ createdAt: 'desc' }],
+      include: { user: { select: { id: true, name: true } } },
+    });
+  }
+
+  async findOne(restaurantId: string, reviewId: string): Promise<Review> {
+    return this.prismaService.review.findUnique({
+      where: {
+        id: reviewId,
+      },
       include: { user: { select: { id: true, name: true } } },
     });
   }

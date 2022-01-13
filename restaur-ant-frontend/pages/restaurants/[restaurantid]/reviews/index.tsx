@@ -69,18 +69,21 @@ const ReviewIndex: NextPage<ReviewIndexProps> = ({ restaurant, reviews }) => {
                     <p className="w-full md:w-1/2 text-xs dark:text-gray-100">
                       Created At {format(parseISO(review.createdAt), "PPPP")}
                     </p>
+
                     <div className="w-full md:w-1/2 flex justify-end">
                       <div className="flex flex-row justify-between">
-                        <button
-                          className="px-3 py-2 bg-gray-800 text-white text-sm font-bold uppercase rounded justify-self-end"
-                          onClick={() =>
-                            Router.push(
-                              `/restaurants/${restaurant.id}/reviews/${review.id}/edit`
-                            )
-                          }
-                        >
-                          Edit
-                        </button>
+                        {session?.user.role === "ADMIN" && (
+                          <button
+                            className="px-3 py-2 bg-gray-800 text-white text-sm font-bold uppercase rounded justify-self-end"
+                            onClick={() =>
+                              Router.push(
+                                `/restaurants/${restaurant.id}/reviews/${review.id}/edit`
+                              )
+                            }
+                          >
+                            Edit
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -103,14 +106,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         destination: "/auth/signin",
       },
     };
-  } else if (session.user.role !== "ADMIN") {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-        notFound: true,
-      },
-    };
   }
 
   try {
@@ -121,7 +116,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!getRestaurantResponse.data.success) {
       throw getRestaurantResponse.data.message;
     }
-    console.log(getRestaurantResponse.data);
 
     const getReviewsResponse = await getAuth(
       `/restaurant/${context.params?.restaurantid}/review/all`,
@@ -130,7 +124,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!getReviewsResponse.data.success) {
       throw getReviewsResponse.data.message;
     }
-    console.log(getReviewsResponse.data);
 
     return {
       props: {

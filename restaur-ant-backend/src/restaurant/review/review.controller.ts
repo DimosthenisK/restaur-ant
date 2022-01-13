@@ -41,6 +41,19 @@ export class ReviewController {
     };
   }
 
+  @ApiParam({ name: 'restaurantId', type: 'string' })
+  @ApiParam({ name: 'reviewId', type: 'string' })
+  @Get('/:reviewId')
+  async findOne(
+    @Param('restaurantId') restaurantId: string,
+    @Param('reviewId') reviewId: string,
+  ): Promise<any> {
+    return {
+      success: true,
+      data: await this.reviewService.findOne(restaurantId, reviewId),
+    };
+  }
+
   @Post()
   @ApiBody({ type: () => CreateReviewDto })
   @ApiParam({ name: 'restaurantId', type: 'string' })
@@ -77,7 +90,10 @@ export class ReviewController {
   @ApiBody({ type: () => UpdateReviewDto })
   async update(@Body() dto: UpdateReviewDto, @Param('id') id: string) {
     try {
-      const updatedReview = await this.reviewService.update(id, dto);
+      const updatedReview = await this.reviewService.update(
+        id,
+        Object.assign(dto, { dateOfVisit: new Date(dto.dateOfVisit) }),
+      );
 
       return {
         success: true,
