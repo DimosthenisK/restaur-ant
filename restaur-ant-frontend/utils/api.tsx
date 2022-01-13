@@ -56,10 +56,6 @@ export async function deleteAuth<T = any, K = any>(
   url: string,
   token: string
 ): Promise<AxiosResponse<T, K>> {
-  console.log(
-    process.env["BACKEND_URL"],
-    process.env["NEXT_PUBLIC_BACKEND_URL"]
-  );
   const response = await axios.delete(
     `${
       process.env["BACKEND_URL"] || process.env["NEXT_PUBLIC_BACKEND_URL"]

@@ -187,7 +187,6 @@ const ReviewAdd: NextPage<ReviewAddProps> = ({ restaurant }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log(context.params);
   const session = await getSession(context);
   if (!session) {
     return {
@@ -214,7 +213,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!getRestaurantResponse.data.success) {
       throw getRestaurantResponse.data.message;
     }
-    console.log(getRestaurantResponse.data);
 
     return {
       props: {

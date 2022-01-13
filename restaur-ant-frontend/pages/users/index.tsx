@@ -80,7 +80,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!getUserResponse.data.success) {
       throw getUserResponse.data.message;
     }
-    console.log(getUserResponse.data);
 
     return {
       props: {

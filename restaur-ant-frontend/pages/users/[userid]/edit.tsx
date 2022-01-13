@@ -290,7 +290,6 @@ const ReviewAdd: NextPage<UserEditProps> = ({ user }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log(context.params);
   const session = await getSession(context);
   if (!session) {
     return {

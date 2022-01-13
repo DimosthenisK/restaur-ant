@@ -78,7 +78,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     if (!getRestaurantsResponse.data.success) {
       throw getRestaurantsResponse.data.message;
     }
-    console.log(getRestaurantsResponse.data);
 
     return {
       props: {
