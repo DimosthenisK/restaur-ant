@@ -11,9 +11,9 @@ interface props {
 
 export const Restaurant = ({ id, name, rating, description }: props) => {
   return (
-    <div className="flex bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="w-full p-4">
-        <div className="flex justify-between items-center">
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="flex flex-col w-full p-4 h-[18rem]">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center">
           <h1 className="text-gray-900 font-bold text-3xl text-ellipsis max-w-1/2 line-clamp-1">
             {name}
           </h1>
@@ -21,10 +21,10 @@ export const Restaurant = ({ id, name, rating, description }: props) => {
             <Rating rating={rating} />
           </div>
         </div>
-        <p className="mt-2 text-gray-600 h-24 sm:h-16 md:h-12 lg:h-36 text-ellipsis">
+        <p className="mt-2 text-gray-600 line-clamp-4 text-ellipsis grow">
           {description}
         </p>
-        <div className="flex flex-row-reverse mt-3">
+        <div className="flex flex-row-reverse mt-3  self-end">
           <Link href={`/restaurants/${id}`}>
             <button className="px-3 py-2 bg-gray-800 text-white text-sm font-bold uppercase rounded justify-self-end">
               View More
