@@ -46,7 +46,7 @@ const ReviewIndex: NextPage<ReviewIndexProps> = ({ restaurant, reviews }) => {
         <div className="w-full flex flex-row flex-wrap items-center">
           {reviews.map((review) => (
             <div key={review.id} className="w-full lg:w-1/2">
-              <div className="h-64 flex flex-col justify-between bg-white dark:bg-red-800 rounded-lg border border-red-700 m-2 py-5 px-4">
+              <div className="h-[20rem] md:h-64 flex flex-col justify-between bg-white dark:bg-red-800 rounded-lg border border-red-700 m-2 py-5 px-4">
                 <div>
                   <div className="flex flex-row justify-between content-center mb-3">
                     <h2 className="text-gray-800 dark:text-gray-100 font-bold inline text-xl">
