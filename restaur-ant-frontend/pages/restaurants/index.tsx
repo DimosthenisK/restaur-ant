@@ -8,10 +8,14 @@ import { getAuth } from '../../utils/api';
 import type { GetServerSideProps, NextPage } from "next";
 
 export interface RestaurantsListProps {
+  page: number;
   restaurants: any[];
 }
 
-const RestaurantsList: NextPage<RestaurantsListProps> = ({ restaurants }) => {
+const RestaurantsList: NextPage<RestaurantsListProps> = ({
+  page,
+  restaurants,
+}) => {
   const { data: session, status } = useSession({ required: true });
 
   let actions;
@@ -54,6 +58,37 @@ const RestaurantsList: NextPage<RestaurantsListProps> = ({ restaurants }) => {
               </div>
             ))}
           </div>
+          <div className="flex flew-row items-center justify-center pt-5">
+            <button
+              className="px-3 py-2 bg-gray-800 text-white text-sm font-bold uppercase rounded disabled:opacity-75"
+              onClick={() =>
+                Router.push(`/restaurants?page=${Number(page) - 1}`)
+              }
+              disabled={page === 1}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M20,10V14H11L14.5,17.5L12.08,19.92L4.16,12L12.08,4.08L14.5,6.5L11,10H20Z"
+                />
+              </svg>
+            </button>
+            <h1 className="text-xl font-bold mx-4">{page}</h1>
+            <button
+              className="px-3 py-2 bg-gray-800 text-white text-sm font-bold uppercase rounded disabled:opacity-75"
+              onClick={() =>
+                Router.push(`/restaurants?page=${Number(page) + 1}`)
+              }
+              disabled={restaurants.length < 12}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24">
+                <path
+                  fill="currentColor"
+                  d="M4,10V14H13L9.5,17.5L11.92,19.92L19.84,12L11.92,4.08L9.5,6.5L13,10H4Z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </Header>
     </>
@@ -72,7 +107,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   try {
     const getRestaurantsResponse = await getAuth(
-      `/restaurant/1`,
+      `/restaurant/${context.query?.page || 1}`,
       session.backToken
     );
     if (!getRestaurantsResponse.data.success) {
@@ -81,6 +116,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     return {
       props: {
+        page: context.query?.page || 1,
         restaurants: getRestaurantsResponse.data.data,
       },
     };

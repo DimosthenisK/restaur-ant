@@ -241,7 +241,7 @@ const ReviewAdd: NextPage<UserEditProps> = ({ user }) => {
         <>
           <button
             type="button"
-            className="mt-3 w-full inline-flex justify-center rounded-md border border-red-900 shadow-sm px-4 py-2 bg-white text-base font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-800 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm bg-red-800"
+            className="mt-3 w-full inline-flex justify-center rounded-md border border-red-900 shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-800 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm bg-red-800"
             onClick={deleteHandler}
           >
             Proceed
@@ -257,14 +257,14 @@ const ReviewAdd: NextPage<UserEditProps> = ({ user }) => {
       </Modal>
       <Modal
         title={`Switch this user's role to ${userAltRole}`}
-        description="Are you sure you want to witch this user's role to ${userAltRole}?"
+        description={`Are you sure you want to witch this user's role to ${userAltRole}?`}
         theme="danger"
         show={isSwitchRoleModalShowing}
       >
         <>
           <button
             type="button"
-            className="mt-3 w-full inline-flex justify-center rounded-md border border-red-900 shadow-sm px-4 py-2 bg-white text-base font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-800 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm bg-red-800"
+            className="mt-3 w-full inline-flex justify-center rounded-md border border-red-900 shadow-sm px-4 py-2 text-base font-medium text-white hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-800 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm bg-red-800"
             onClick={switchRoleHandler}
           >
             Proceed
