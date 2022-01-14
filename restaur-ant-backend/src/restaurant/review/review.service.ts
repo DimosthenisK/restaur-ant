@@ -132,8 +132,7 @@ export class ReviewService {
     });
 
     if (review) {
-      const sanitaryReview: Review = {
-        ...review,
+      const sanitaryReview: Partial<Review> = {
         rating: reviewDto.rating,
         comment: reviewDto.comment,
         dateOfVisit: reviewDto.dateOfVisit,

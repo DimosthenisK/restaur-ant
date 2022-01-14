@@ -64,7 +64,6 @@ export class ReviewController {
   ) {
     const userId = request.user.id;
     try {
-      console.log(restaurantId, userId, dto);
       const newReview = await this.reviewService.create(
         userId,
         restaurantId,
@@ -87,12 +86,15 @@ export class ReviewController {
   @Roles('ADMIN')
   @Patch('/:id')
   @ApiParam({ name: 'id', type: 'string' })
+  @ApiParam({ name: 'restaurantId', type: 'string' })
   @ApiBody({ type: () => UpdateReviewDto })
   async update(@Body() dto: UpdateReviewDto, @Param('id') id: string) {
     try {
       const updatedReview = await this.reviewService.update(
         id,
-        Object.assign(dto, { dateOfVisit: new Date(dto.dateOfVisit) }),
+        dto.dateOfVisit
+          ? Object.assign(dto, { dateOfVisit: new Date(dto.dateOfVisit) })
+          : dto,
       );
 
       return {
@@ -111,6 +113,7 @@ export class ReviewController {
   @Roles('ADMIN')
   @Delete('/:id')
   @ApiParam({ name: 'id', type: 'string' })
+  @ApiParam({ name: 'restaurantId', type: 'string' })
   async delete(@Param('id') id: string) {
     try {
       const deletedReview = await this.reviewService.delete(id);
