@@ -1,7 +1,7 @@
 import { IsIn } from 'class-validator';
-import { CreateUserDto as GeneratedCreateUserDto } from '../../../generated/dto/user/dto/create-user.dto';
+import { UpdateUserDto as GeneratedUpdateUserDto } from '../../../generated/dto/user/dto/update-user.dto';
 
-export class UpdateUserRoleDto extends GeneratedCreateUserDto {
+export class UpdateUserRoleDto extends GeneratedUpdateUserDto {
   @IsIn(['ADMIN', 'USER'])
   role: 'ADMIN' | 'USER';
 }
