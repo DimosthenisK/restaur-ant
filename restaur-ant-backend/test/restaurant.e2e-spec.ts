@@ -22,7 +22,7 @@ describe('Restaurant Controller (e2e)', () => {
   let testAdminUser: User;
   let testAdminToken: string;
   let testRestaurant: Restaurant;
-  let additionalUserIDs: string[] = [];
+  let additionalRestaurantIDs: string[] = [];
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -86,12 +86,14 @@ describe('Restaurant Controller (e2e)', () => {
   afterEach(async () => {
     await prismaService.user.deleteMany({
       where: {
-        id: { in: [testUserUser.id, testAdminUser.id, ...additionalUserIDs] },
+        id: { in: [testUserUser.id, testAdminUser.id] },
       },
     });
-    additionalUserIDs = [];
 
-    await prismaService.restaurant.delete({ where: { id: testRestaurant.id } });
+    await prismaService.restaurant.deleteMany({
+      where: { id: { in: [testRestaurant.id, ...additionalRestaurantIDs] } },
+    });
+    additionalRestaurantIDs = [];
   });
 
   it('/ (POST)', async () => {
@@ -109,7 +111,7 @@ describe('Restaurant Controller (e2e)', () => {
     expect(response.body.message).toBe('Restaurant created successfully');
     expect(response.body.data).toBeTruthy();
 
-    additionalUserIDs.push(response.body.data);
+    additionalRestaurantIDs.push(response.body.data);
   });
 
   it('/:id (PATCH) [From Admin]', async () => {
