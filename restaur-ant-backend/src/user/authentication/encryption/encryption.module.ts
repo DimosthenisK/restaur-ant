@@ -4,6 +4,6 @@ import { EncryptionService } from './encryption.service';
 
 @Module({
   providers: [EncryptionService, BcryptService],
-  exports: [EncryptionService],
+  exports: [EncryptionService, BcryptService],
 })
 export class EncryptionModule {}
