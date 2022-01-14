@@ -35,6 +35,7 @@ const Users: NextPage<UsersProps> = ({ users }) => {
                   {user.name}
                 </h2>
                 <h2 className="text-lg text-white text-center">{user.email}</h2>
+                <h2 className="text-white text-center">{user.role}</h2>
                 <div className="flex justify-center w-full mt-2">
                   <button
                     className="px-3 py-2 bg-gray-800 text-white text-sm font-bold uppercase rounded"
