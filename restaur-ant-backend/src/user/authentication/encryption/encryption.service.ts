@@ -12,7 +12,6 @@ export class EncryptionService {
     this.enable = Boolean(
       Number(configService.get<boolean>('ENABLE_ENCRYPTION')),
     );
-    console.log('ENABLED ENCRYPTION: ' + this.enable);
   }
 
   async hash(password: string): Promise<string> {
