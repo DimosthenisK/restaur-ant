@@ -1,4 +1,5 @@
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
@@ -10,19 +11,22 @@ async function bootstrap() {
   const prismaService: PrismaService = app.get(PrismaService);
   prismaService.enableShutdownHooks(app);
 
+  const configService: ConfigService = app.get(ConfigService);
   //Swagger
-  const config = new DocumentBuilder()
-    .setTitle('RestaurAnt API')
-    .setDescription('RestaurAnt API')
-    .setVersion('1.0')
-    .addSecurity('bearer', {
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-    })
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  if (configService.get('NODE_ENV') === 'DEV') {
+    const config = new DocumentBuilder()
+      .setTitle('RestaurAnt API')
+      .setDescription('RestaurAnt API')
+      .setVersion('1.0')
+      .addSecurity('bearer', {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      })
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+  }
 
   app.useGlobalPipes(
     new ValidationPipe({
