@@ -47,6 +47,10 @@ BACKEND_URL=http://localhost:3000
 NEXT_PUBLIC_BACKEND_URL=http://localhost:3000
 ```
 
+### Database
+
+The database is PG with prisma as the ORM. You can initiate the database with `npx prisma db push`
+
 ### Backend
 
 To install the backend you need the NestJS CLI utility
